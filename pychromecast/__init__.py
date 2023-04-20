@@ -241,7 +241,7 @@ def get_chromecasts(  # pylint: disable=too-many-locals
     browser.start_discovery()
     return browser
 
-
+CHROMECAST_DEFAULT_PORT = 8009
 # pylint: disable=too-many-instance-attributes, too-many-public-methods
 class Chromecast:
     """
@@ -266,9 +266,29 @@ class Chromecast:
     ):
         self.logger = logging.getLogger(__name__)
 
-        if not cast_info.cast_type:
-            cast_info = get_cast_type(cast_info, zconf)
-        self.cast_info = cast_info
+        if isinstance(cast_info, CastInfo):
+            self.cast_info = cast_info
+        else:
+            if isinstance(cast_info, tuple):
+                # Render cast_info as an ip + port tuple
+                ip_address, port = cast_info
+            elif isinstance(cast_info, str):
+                # Render cast_info as just an ip string
+                ip_address = cast_info
+                port = CHROMECAST_DEFAULT_PORT
+
+            service_infos = [ServiceInfo(
+                SERVICE_TYPE_HOST,
+                (ip_address, port))]
+
+            created_cast_info = CastInfo(
+                service_infos, None, None, None,
+                ip_address, port,
+                None, None)
+            self.cast_info = created_cast_info
+
+        if not self.cast_info.cast_type:
+            self.cast_info = get_cast_type(self.cast_info, zconf)
 
         self.status = None
         self.status_event = threading.Event()
