@@ -4,6 +4,24 @@ pychromecast |Build Status|
 .. |Build Status| image:: https://travis-ci.org/balloob/pychromecast.svg?branch=master
    :target: https://travis-ci.org/balloob/pychromecast
 
+|
+|
+|
+
+Disclaimer
+----
+**I don't test any of the shit I push to this fork.
+If it works in the exact way I'm using it, I send it.
+If you're looking at this fork, don't use it.**
+
+BTW Python fucking sucks.  It's just total shit.  I'm just here
+for AppDaemon in Home Assistant.
+
+|
+|
+|
+
+
 Library for Python 3.6+ to communicate with the Google Chromecast. It
 currently supports:
 
