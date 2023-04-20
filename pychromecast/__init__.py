@@ -266,9 +266,7 @@ class Chromecast:
     ):
         self.logger = logging.getLogger(__name__)
 
-        if isinstance(cast_info, CastInfo):
-            self.cast_info = cast_info
-        else:
+        if not isinstance(cast_info, CastInfo):
             if isinstance(cast_info, tuple):
                 # Render cast_info as an ip + port tuple
                 ip_address, port = cast_info
@@ -276,19 +274,22 @@ class Chromecast:
                 # Render cast_info as just an ip string
                 ip_address = cast_info
                 port = CHROMECAST_DEFAULT_PORT
+            else:
+                raise Exception("Invalid argument type 'cast_info'")
 
             service_infos = [ServiceInfo(
                 SERVICE_TYPE_HOST,
                 (ip_address, port))]
 
-            created_cast_info = CastInfo(
+            cast_info = CastInfo(
                 service_infos, None, None, None,
                 ip_address, port,
                 None, None)
-            self.cast_info = created_cast_info
 
-        if not self.cast_info.cast_type:
-            self.cast_info = get_cast_type(self.cast_info, zconf)
+        if not cast_info.cast_type:
+            cast_info = get_cast_type(cast_info, zconf)
+
+        self.cast_info = cast_info
 
         self.status = None
         self.status_event = threading.Event()
